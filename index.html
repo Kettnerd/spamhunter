@@ -1,954 +1,583 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T Kettner — ML Researcher & Engineer</title>
-    <meta name="description" content="Machine learning researcher focused on bias mitigation in large language models. Senior CS student at MSOE with 15 years of professional experience.">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --bg: #0D0D0F;
-            --bg-warm: #111114;
-            --bg-card: #17171C;
-            --bg-card-hover: #1E1E25;
-            --text: #E8E6E3;
-            --text-soft: #B8B5AF;
-            --text-muted: #7D7A73;
-            --accent: #5B9FD6;
-            --accent-soft: #6AABE0;
-            --accent-dim: rgba(91, 159, 214, 0.10);
-            --accent-glow: rgba(91, 159, 214, 0.04);
-            --accent-secondary: #8ABBD4;
-            --accent-secondary-dim: rgba(138, 187, 212, 0.10);
-            --heart: #C96B6B;
-            --heart-dim: rgba(201, 107, 107, 0.08);
-            --border: rgba(255, 255, 255, 0.05);
-            --border-warm: rgba(91, 159, 214, 0.12);
-            --serif: 'Playfair Display', Georgia, serif;
-            --sans: 'Source Sans 3', -apple-system, sans-serif;
-            --mono: 'JetBrains Mono', monospace;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: var(--sans);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.75;
-            font-weight: 300;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        /* ── Atmospheric background ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 70% 50% at 15% 5%, rgba(91, 159, 214, 0.04), transparent 60%),
-                radial-gradient(ellipse 50% 40% at 85% 85%, rgba(138, 187, 212, 0.03), transparent 60%),
-                radial-gradient(ellipse 40% 30% at 50% 50%, rgba(201, 107, 107, 0.02), transparent 60%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Grain texture overlay */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        ::selection {
-            background: rgba(91, 159, 214, 0.25);
-            color: var(--text);
-        }
-
-        /* ── Navigation ── */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 1.2rem 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(13, 13, 15, 0.88);
-            backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-name {
-            font-family: var(--serif);
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--text);
-            letter-spacing: 0.01em;
-        }
-
-        .nav-name .heart {
-            color: var(--heart);
-            display: inline-block;
-            animation: heartbeat 2.5s ease-in-out infinite;
-            font-style: normal;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            14% { transform: scale(1.15); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.1); }
-            56% { transform: scale(1); }
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.82rem;
-            font-weight: 400;
-            letter-spacing: 0.04em;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--accent);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover { color: var(--text-soft); }
-        .nav-links a:hover::after { width: 100%; }
-
-        /* ── Layout ── */
-        .container {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        section { padding: 5.5rem 0; }
-
-        /* ── Hero ── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-top: 5rem;
-        }
-
-        .hero-label {
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: var(--accent);
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            margin-bottom: 1.8rem;
-            opacity: 0;
-            animation: fadeUp 0.9s ease forwards 0.2s;
-        }
-
-        .hero h1 {
-            font-family: var(--serif);
-            font-size: clamp(2.6rem, 5.5vw, 4rem);
-            font-weight: 400;
-            line-height: 1.2;
-            margin-bottom: 1.8rem;
-            opacity: 0;
-            animation: fadeUp 0.9s ease forwards 0.4s;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        .hero-description {
-            font-size: 1.08rem;
-            color: var(--text-soft);
-            max-width: 600px;
-            line-height: 1.85;
-            opacity: 0;
-            animation: fadeUp 0.9s ease forwards 0.6s;
-        }
-
-        .hero-description strong {
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2.8rem;
-            opacity: 0;
-            animation: fadeUp 0.9s ease forwards 0.8s;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--bg);
-            background: var(--accent);
-            text-decoration: none;
-            font-family: var(--sans);
-            font-size: 0.85rem;
-            font-weight: 500;
-            padding: 0.75rem 1.6rem;
-            border-radius: 6px;
-            transition: all 0.3s;
-            letter-spacing: 0.02em;
-        }
-
-        .btn-primary:hover {
-            background: #6DB0E8;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 30px rgba(91, 159, 214, 0.2);
-        }
-
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-family: var(--sans);
-            font-size: 0.85rem;
-            font-weight: 400;
-            padding: 0.75rem 1.6rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            transition: all 0.3s;
-        }
-
-        .btn-ghost:hover {
-            color: var(--accent);
-            border-color: var(--border-warm);
-            background: var(--accent-dim);
-        }
-
-        .hero-links {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.9s ease forwards 1s;
-        }
-
-        .hero-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.82rem;
-        }
-
-        .hero-links a:hover { color: var(--accent); }
-
-        /* ── Divider ── */
-        .divider {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border-warm), transparent);
-            margin: 0 auto;
-        }
-
-        /* ── Section Headers ── */
-        .section-label {
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            color: var(--accent);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 0.8rem;
-        }
-
-        .section-title {
-            font-family: var(--serif);
-            font-size: 2rem;
-            font-weight: 400;
-            margin-bottom: 0.8rem;
-            line-height: 1.3;
-        }
-
-        .section-intro {
-            color: var(--text-muted);
-            max-width: 560px;
-            margin-bottom: 3rem;
-            font-size: 0.95rem;
-        }
-
-        /* ── Philosophy Callout ── */
-        .philosophy {
-            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(201, 107, 107, 0.04) 100%);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--heart);
-            border-radius: 0 10px 10px 0;
-            padding: 2rem 2.2rem;
-            margin-bottom: 3.5rem;
-        }
-
-        .philosophy p {
-            color: var(--text-soft);
-            font-size: 1rem;
-            line-height: 1.85;
-            font-style: italic;
-        }
-
-        .philosophy .attrib {
-            font-style: normal;
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            margin-top: 0.8rem;
-            display: block;
-        }
-
-        /* ── Project Cards ── */
-        .project-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 2rem 2.2rem;
-            margin-bottom: 1.2rem;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 0;
-            background: var(--accent);
-            transition: height 0.4s ease;
-            border-radius: 0 0 2px 0;
-        }
-
-        .project-card:hover {
-            background: var(--bg-card-hover);
-            border-color: rgba(91, 159, 214, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .project-card:hover::before { height: 100%; }
-
-        .project-card h3 {
-            font-family: var(--sans);
-            font-weight: 500;
-            font-size: 1.08rem;
-            margin-bottom: 0.7rem;
-            color: var(--text);
-        }
-
-        .project-card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.75;
-            margin-bottom: 1.2rem;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.45rem;
-        }
-
-        .tag {
-            font-family: var(--mono);
-            font-size: 0.68rem;
-            color: var(--accent-secondary);
-            background: var(--accent-secondary-dim);
-            padding: 0.28rem 0.7rem;
-            border-radius: 4px;
-            letter-spacing: 0.02em;
-        }
-
-        .tag.highlight {
-            color: var(--accent);
-            background: var(--accent-dim);
-        }
-
-        .project-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.82rem;
-            font-weight: 400;
-            margin-top: 0.5rem;
-            transition: gap 0.3s;
-        }
-
-        .project-link:hover { gap: 0.7rem; }
-
-        /* ── Narrative Block ── */
-        .narrative {
-            padding: 3rem 0;
-            border-top: 1px solid var(--border);
-            margin-top: 2rem;
-        }
-
-        .narrative p {
-            color: var(--text-soft);
-            font-size: 0.95rem;
-            line-height: 1.85;
-            max-width: 600px;
-        }
-
-        .narrative p + p {
-            margin-top: 1rem;
-        }
-
-        /* ── CV / Experience ── */
-        .cv-entry {
-            padding: 1.8rem 0;
-            border-bottom: 1px solid var(--border);
-            display: grid;
-            grid-template-columns: 160px 1fr;
-            gap: 1.5rem;
-            align-items: start;
-        }
-
-        .cv-entry:last-of-type { border-bottom: none; }
-
-        .cv-date {
-            font-family: var(--mono);
-            font-size: 0.73rem;
-            color: var(--text-muted);
-            letter-spacing: 0.04em;
-            padding-top: 0.2rem;
-        }
-
-        .cv-content {}
-
-        .cv-role {
-            font-weight: 500;
-            font-size: 1.02rem;
-            margin-bottom: 0.15rem;
-        }
-
-        .cv-org {
-            color: var(--accent-soft);
-            font-size: 0.88rem;
-            margin-bottom: 0.6rem;
-        }
-
-        .cv-desc {
-            color: var(--text-muted);
-            font-size: 0.86rem;
-            line-height: 1.75;
-        }
-
-        /* ── Skills ── */
-        .skills-section {
-            margin-top: 3.5rem;
-            padding-top: 3rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .skills-section h3 {
-            font-family: var(--serif);
-            font-size: 1.35rem;
-            font-weight: 400;
-            margin-bottom: 2rem;
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .skill-group h4 {
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            color: var(--accent);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 0.8rem;
-        }
-
-        .skill-group p {
-            color: var(--text-muted);
-            font-size: 0.86rem;
-            line-height: 1.85;
-        }
-
-        /* ── Contact ── */
-        .contact-section .section-intro a {
-            color: var(--accent);
-            text-decoration: none;
-            border-bottom: 1px solid rgba(91, 159, 214, 0.3);
-            transition: border-color 0.3s;
-        }
-
-        .contact-section .section-intro a:hover {
-            border-color: var(--accent);
-        }
-
-        .contact-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .contact-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.85rem 1.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-soft);
-            text-decoration: none;
-            font-size: 0.88rem;
-            transition: all 0.3s;
-        }
-
-        .contact-link:hover {
-            border-color: var(--border-warm);
-            background: var(--accent-dim);
-            color: var(--accent);
-            transform: translateY(-1px);
-        }
-
-        .contact-link svg {
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .contact-link:hover svg { opacity: 1; }
-
-        /* ── Footer ── */
-        footer {
-            padding: 3.5rem 0;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        footer p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        footer .heart-footer {
-            color: var(--heart);
-            display: inline-block;
-        }
-
-        /* ── Animations ── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Stagger children */
-        .stagger > .reveal:nth-child(2) { transition-delay: 0.08s; }
-        .stagger > .reveal:nth-child(3) { transition-delay: 0.16s; }
-        .stagger > .reveal:nth-child(4) { transition-delay: 0.24s; }
-        .stagger > .reveal:nth-child(5) { transition-delay: 0.32s; }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .cv-entry {
-                grid-template-columns: 1fr;
-                gap: 0.3rem;
-            }
-        }
-
-        @media (max-width: 640px) {
-            nav { padding: 1rem 1.2rem; }
-            .nav-links { gap: 1.2rem; }
-            .container { padding: 0 1.2rem; }
-            section { padding: 3.5rem 0; }
-            .hero-cta { flex-direction: column; gap: 0.8rem; }
-            .hero-cta .btn-primary,
-            .hero-cta .btn-ghost { text-align: center; justify-content: center; }
-            .hero-links { flex-wrap: wrap; }
-            .contact-grid { flex-direction: column; }
-            .skills-grid { grid-template-columns: 1fr 1fr; }
-            .philosophy { padding: 1.5rem 1.6rem; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpamHunter — Spam Call Investigative Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #0e0e08;
+      --border: #3a3a20;
+      --border2: #2a2a10;
+      --text: #d4d4aa;
+      --muted: #7a7a50;
+      --dim: #5a5a30;
+      --accent: #e8e830;
+      --accent-hover: #f5f540;
+      --risk-high: #ef4444;
+      --risk-med: #f59e0b;
+      --risk-ok: #6b7280;
+      --green: #4ade80;
+      --orange: #c0a060;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+    }
+
+    .app {
+      min-height: 100vh;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(180,180,100,0.03) 39px, rgba(180,180,100,0.03) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(180,180,100,0.03) 39px, rgba(180,180,100,0.03) 40px);
+      padding: 2rem 1rem 3rem;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* HEADER */
+    .header {
+      border: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      background: rgba(20,20,10,0.8);
+    }
+    .header::before {
+      content: '// CASE FILE //';
+      position: absolute; top: -0.6rem; left: 1rem;
+      background: var(--bg); padding: 0 0.5rem;
+      font-size: 0.62rem; color: var(--dim); letter-spacing: 0.15em;
+    }
+    .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+    .title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.6rem; font-weight: 700;
+      color: var(--accent); letter-spacing: 0.05em; line-height: 1;
+    }
+    .subtitle { font-size: 0.7rem; color: var(--dim); letter-spacing: 0.1em; margin-top: 0.4rem; }
+    .stamp {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem; font-weight: 600;
+      border: 2px solid var(--border); padding: 0.2rem 0.6rem;
+      color: var(--dim); letter-spacing: 0.15em;
+    }
+
+    /* TABS */
+    .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .tab {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em;
+      padding: 0.6rem 1.2rem; background: none; border: none;
+      color: var(--dim); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s; text-transform: uppercase;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* PANEL */
+    .panel {
+      border: 1px solid var(--border); padding: 1.5rem;
+      background: rgba(14,14,8,0.9); position: relative;
+      display: none;
+    }
+    .panel.active { display: block; }
+    .panel-label {
+      position: absolute; top: -0.6rem; left: 1rem;
+      background: var(--bg); padding: 0 0.4rem;
+      font-size: 0.6rem; color: var(--dim); letter-spacing: 0.12em;
+    }
+
+    /* FIELDS */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .field { display: flex; flex-direction: column; gap: 0.3rem; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-size: 0.6rem; letter-spacing: 0.14em; color: var(--dim); text-transform: uppercase; }
+
+    input, select, textarea {
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem; padding: 0.45rem 0.6rem;
+      outline: none; transition: border-color 0.15s; width: 100%;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    select option { background: #111108; }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* RISK BADGE */
+    .risk-badge {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 0.8rem; border-left: 3px solid;
+      margin-bottom: 1rem; font-size: 0.75rem;
+      background: rgba(0,0,0,0.3);
+    }
+    .risk-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* CHECKBOX ROW */
+    .checkbox-row {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      margin-bottom: 1rem; padding: 0.6rem;
+      border: 1px solid var(--border2); background: rgba(30,30,5,0.4);
+    }
+    .checkbox-row input[type=checkbox] { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; accent-color: var(--accent); }
+    .checkbox-label { font-size: 0.74rem; color: #a0a080; line-height: 1.5; }
+
+    /* OUTPUT BOX */
+    .output-box { border: 1px solid var(--border); background: #050503; margin-top: 1.2rem; }
+    .output-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border2);
+      background: rgba(20,20,5,0.8);
+    }
+    .output-title { font-size: 0.62rem; color: var(--dim); letter-spacing: 0.14em; text-transform: uppercase; }
+    pre {
+      padding: 1rem; font-family: 'Share Tech Mono', monospace;
+      font-size: 0.74rem; line-height: 1.7; color: #a0a080;
+      white-space: pre-wrap; word-break: break-word;
+    }
+
+    /* BUTTONS */
+    .copy-btn {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+      background: none; border: 1px solid var(--border); color: var(--dim);
+      padding: 0.2rem 0.5rem; cursor: pointer; transition: all 0.15s; letter-spacing: 0.08em;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+    .btn {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.55rem 1.2rem; border: none; cursor: pointer; transition: all 0.15s;
+    }
+    .btn-primary { background: var(--accent); color: var(--bg); }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-link {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+      background: transparent; border: 1px solid var(--border2);
+      color: var(--dim); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.45rem 0.9rem; transition: all 0.15s;
+    }
+    .btn-link:hover { color: var(--text); border-color: var(--dim); }
+
+    .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1rem; }
+
+    /* DIVIDER */
+    hr { border: none; border-top: 1px solid var(--border2); margin: 1.2rem 0; }
+
+    /* PATTERN TAB */
+    .pattern-panel {
+      border: 1px solid #3a2a00; background: rgba(20,12,0,0.6);
+      padding: 1.2rem; margin-bottom: 1.5rem; position: relative;
+    }
+    .pattern-panel::before {
+      content: '// NEIGHBOR SPOOF ANALYZER //';
+      position: absolute; top: -0.6rem; left: 1rem;
+      background: var(--bg); padding: 0 0.4rem;
+      font-size: 0.6rem; color: #805010; letter-spacing: 0.12em;
+    }
+    .pattern-inputs { display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.8rem; align-items: end; margin-bottom: 1rem; }
+    .pattern-result {
+      font-size: 0.76rem; line-height: 1.6; color: var(--orange);
+      padding: 0.8rem; border-left: 3px solid #805010; background: rgba(0,0,0,0.3);
+    }
+
+    /* LOOKUP GRID */
+    .lookup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.7rem; margin-top: 1rem; }
+    .lookup-card {
+      border: 1px solid var(--border2); padding: 0.8rem;
+      background: rgba(10,10,4,0.8); text-decoration: none;
+      color: #a0a080; transition: all 0.15s; display: block;
+    }
+    .lookup-card:hover { border-color: var(--accent); color: var(--accent); }
+    .lookup-card-name { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
+    .lookup-card-desc { font-size: 0.65rem; color: var(--dim); line-height: 1.4; }
+
+    /* FOOTER */
+    .footer { text-align: center; margin-top: 2rem; font-size: 0.6rem; color: var(--border); letter-spacing: 0.1em; }
+
+    @media (max-width: 560px) {
+      .field-row { grid-template-columns: 1fr; }
+      .title { font-size: 2rem; }
+      .pattern-inputs { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
+<div class="app">
+  <div class="container">
 
-<nav>
-    <span class="nav-name">T. <span class="heart">♥</span></span>
-    <ul class="nav-links">
-        <li><a href="#research">Research</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#experience">Background</a></li>
-        <li><a href="#contact">Say Hello</a></li>
-    </ul>
-</nav>
-
-<!-- ═══════ HERO ═══════ -->
-<section class="hero">
-    <div class="container">
-        <p class="hero-label">ML Researcher · Engineer · Advocate</p>
-
-        <h1>Building AI that's<br><em>fair by design.</em></h1>
-
-        <p class="hero-description">
-            I'm T — a senior Computer Science student at <strong>MSOE</strong> researching
-            how bias emerges in large language models. After 15 years in the working world,
-            I came back to school with one question: <strong>can we train AI to be equitable
-            from the start, rather than patching it after the fact?</strong>
-        </p>
-
-        <div class="hero-cta">
-            <a href="#contact" class="btn-primary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                Get in Touch
-            </a>
-            <a href="#research" class="btn-ghost">See My Research →</a>
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="title">SPAMHUNTER</div>
+          <div class="subtitle">SPAM CALL INVESTIGATIVE &amp; COMPLAINT TOOL — v2.1</div>
         </div>
-
-        <div class="hero-links">
-            <a href="https://github.com/YOUR-USERNAME" target="_blank">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                GitHub
-            </a>
-            <a href="https://linkedin.com/in/YOUR-PROFILE" target="_blank">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                LinkedIn
-            </a>
-        </div>
+        <div class="stamp">CASE FILE</div>
+      </div>
     </div>
-</section>
 
-<div class="container"><div class="divider"></div></div>
-
-<!-- ═══════ RESEARCH ═══════ -->
-<section id="research">
-    <div class="container">
-        <div class="reveal">
-            <p class="section-label">01 — Research</p>
-            <h2 class="section-title">What Keeps Me Up at Night</h2>
-            <p class="section-intro">
-                When does a model learn to be biased? Can we intervene at the moment it happens?
-                These aren't just academic questions — they shape who gets heard, who gets hired, and who gets helped.
-            </p>
-        </div>
-
-        <div class="philosophy reveal">
-            <p>
-                I believe fairness shouldn't be an afterthought. If we can understand
-                exactly when and how bias crystallizes during training, we can build systems
-                that are equitable from their very first gradient update.
-            </p>
-            <span class="attrib">— guiding principle</span>
-        </div>
-
-        <div class="stagger">
-            <div class="project-card reveal">
-                <h3>Bias Emergence in LLMs via Grokking</h3>
-                <p>
-                    Investigating when bias crystallizes during LLM training, using the
-                    "grokking" phenomenon as a lens to study bias emergence. Exploring
-                    whether Chain of Thought techniques can reduce bias through the
-                    bias-variance tradeoff framework.
-                </p>
-                <div class="tags">
-                    <span class="tag highlight">Bias Mitigation</span>
-                    <span class="tag highlight">LLMs</span>
-                    <span class="tag">Grokking</span>
-                    <span class="tag">Chain of Thought</span>
-                    <span class="tag highlight">Fairness</span>
-                </div>
-            </div>
-
-            <div class="project-card reveal">
-                <h3>Training for Objectivity from Initialization</h3>
-                <p>
-                    Building a tiny LLM from scratch to test a fundamental question: can we train
-                    for objectivity from the very start, rather than correcting bias after the fact?
-                    Custom C++/CUDA implementation for fine-grained control over every
-                    stage of the training process.
-                </p>
-                <div class="tags">
-                    <span class="tag">C++</span>
-                    <span class="tag">CUDA</span>
-                    <span class="tag">nanoGPT</span>
-                    <span class="tag">HPC / ROSIE</span>
-                    <span class="tag highlight">AI Ethics</span>
-                </div>
-            </div>
-        </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('report')">Report + File</button>
+      <button class="tab" onclick="switchTab('pattern')">Pattern Analyzer</button>
+      <button class="tab" onclick="switchTab('lookup')">Lookup Links</button>
     </div>
-</section>
 
-<div class="container"><div class="divider"></div></div>
+    <!-- REPORT TAB -->
+    <div id="tab-report" class="panel active">
+      <div class="panel-label">INCIDENT DATA ENTRY</div>
 
-<!-- ═══════ PROJECTS ═══════ -->
-<section id="projects">
-    <div class="container">
-        <div class="reveal">
-            <p class="section-label">02 — Projects</p>
-            <h2 class="section-title">Selected Work</h2>
-            <p class="section-intro">
-                Applied ML spanning signal processing, data science, cryptographic data structures,
-                and unsupervised learning.
-            </p>
+      <div class="field-row">
+        <div class="field">
+          <label>Spam Number Received From</label>
+          <input id="phone" type="tel" placeholder="(414) 555-1234" oninput="onPhoneInput(this)" />
         </div>
-
-        <div class="stagger">
-            <div class="project-card reveal">
-                <h3>Guitar Pickup Frequency Response Modeling</h3>
-                <p>
-                    Built ML models to predict guitar pickup frequency responses from electrical
-                    parameters for KedzioraLab's Data Science Practicum. Web scraping from
-                    multiple sources, feature engineering, and comparative model evaluation
-                    using the UIUC Physics dataset.
-                </p>
-                <div class="tags">
-                    <span class="tag">Python</span>
-                    <span class="tag">Scikit-learn</span>
-                    <span class="tag">Web Scraping</span>
-                    <span class="tag">Signal Processing</span>
-                </div>
-            </div>
-
-            <div class="project-card reveal">
-                <h3>Merkle Prefix Trie for Organic Ingredient Traceability</h3>
-                <p>
-                    Designed a cryptographic data structure for verifying organic ingredient
-                    supply chains — combining blockchain-inspired verification with efficient
-                    prefix-based lookups. Built for real-world traceability with potential
-                    commercial applications.
-                </p>
-                <div class="tags">
-                    <span class="tag">Data Structures</span>
-                    <span class="tag">Cryptography</span>
-                    <span class="tag">Supply Chain</span>
-                    <span class="tag">Algorithms</span>
-                </div>
-            </div>
-
-            <div class="project-card reveal">
-                <h3>Spectral Clustering Analysis of Nutritional Data</h3>
-                <p>
-                    Applied spectral clustering to cereal nutritional data, with focus on
-                    computational complexity analysis and rigorous algorithm performance
-                    evaluation across different parameter configurations.
-                </p>
-                <div class="tags">
-                    <span class="tag">Clustering</span>
-                    <span class="tag">Spectral Methods</span>
-                    <span class="tag">Python</span>
-                    <span class="tag">Unsupervised ML</span>
-                </div>
-            </div>
+        <div class="field">
+          <label>Your Number (Called)</label>
+          <input id="yourPhone" type="tel" placeholder="(414) 555-9876" oninput="updateOutputs()" />
         </div>
+      </div>
+
+      <div id="riskBadge" style="display:none" class="risk-badge">
+        <div id="riskDot" class="risk-dot"></div>
+        <span id="riskLevel" style="font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;"></span>
+        <span id="riskNote" style="color:#7a7a50;font-size:0.72rem;"></span>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Date of Call</label>
+          <input id="callDate" type="date" oninput="updateOutputs()" />
+        </div>
+        <div class="field">
+          <label>Approximate Time</label>
+          <input id="callTime" type="time" oninput="updateOutputs()" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Call Type</label>
+          <select id="callType" onchange="updateOutputs()">
+            <option value="">— Select —</option>
+            <option>Robocall / Auto-dialed</option>
+            <option>Impersonating government agency (IRS, SSA, Medicare)</option>
+            <option>Impersonating a business (bank, utility, tech support)</option>
+            <option>Debt collection scam</option>
+            <option>Prize / lottery scam</option>
+            <option>Charity scam</option>
+            <option>Political / survey call</option>
+            <option>Unsolicited sales call (Do Not Call violation)</option>
+            <option>Threatening / extortion call</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>How Delivered</label>
+          <select id="heard" onchange="updateOutputs()">
+            <option value="">— Select —</option>
+            <option>Prerecorded message</option>
+            <option>Live caller</option>
+            <option>Silence / hang-up</option>
+            <option>Text message</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Amount Demanded (if any, $)</label>
+          <input id="amount" type="number" placeholder="0.00" oninput="updateOutputs()" />
+        </div>
+      </div>
+
+      <div class="field full" style="margin-bottom:1rem">
+        <label>Description of Incident</label>
+        <textarea id="description" rows="4" placeholder="Describe what the caller said or what the recorded message stated..." oninput="updateOutputs()"></textarea>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="patternCheck" onchange="updateOutputs()" />
+        <label for="patternCheck" class="checkbox-label">
+          ⚠ This is part of a <strong>neighbor-spoofing pattern</strong> — I've received multiple calls from numbers sharing the same area code and prefix. Add pattern language to both complaints.
+        </label>
+      </div>
+
+      <hr />
+
+      <div class="output-box">
+        <div class="output-header">
+          <span class="output-title">FTC Complaint Text — reportfraud.ftc.gov</span>
+          <button class="copy-btn" id="copyFTC" onclick="copyText('ftcPre','copyFTC')">COPY</button>
+        </div>
+        <pre id="ftcPre"></pre>
+      </div>
+
+      <div class="output-box">
+        <div class="output-header">
+          <span class="output-title">FCC Complaint Text — consumercomplaints.fcc.gov</span>
+          <button class="copy-btn" id="copyFCC" onclick="copyText('fccPre','copyFCC')">COPY</button>
+        </div>
+        <pre id="fccPre"></pre>
+      </div>
+
+      <div class="actions">
+        <a class="btn-link" href="https://reportfraud.ftc.gov" target="_blank" rel="noreferrer">↗ Open FTC Portal</a>
+        <a class="btn-link" href="https://consumercomplaints.fcc.gov" target="_blank" rel="noreferrer">↗ Open FCC Portal</a>
+        <a class="btn-link" href="https://naag.org/find-my-ag" target="_blank" rel="noreferrer">↗ State AG Finder</a>
+      </div>
     </div>
-</section>
 
-<div class="container"><div class="divider"></div></div>
-
-<!-- ═══════ EXPERIENCE ═══════ -->
-<section id="experience">
-    <div class="container">
-        <div class="reveal">
-            <p class="section-label">03 — Background</p>
-            <h2 class="section-title">Experience & Education</h2>
+    <!-- PATTERN TAB -->
+    <div id="tab-pattern" class="panel">
+      <div class="panel-label">NEIGHBOR SPOOF PATTERN ANALYZER</div>
+      <p style="font-size:0.75rem;color:#7a7a50;line-height:1.6;margin-bottom:1.2rem;">
+        Getting hit by calls that all share the same area code and first 3 digits? That's <strong style="color:#c0a060;">neighbor spoofing</strong> — automated systems cycling through a number range to look local. Enter the pattern here for targeted action steps and carrier escalation language.
+      </p>
+      <div class="pattern-inputs">
+        <div class="field">
+          <label>Area Code (3 digits)</label>
+          <input id="patArea" type="tel" maxlength="3" placeholder="414" />
         </div>
-
-        <div class="stagger">
-            <div class="cv-entry reveal">
-                <p class="cv-date">2022 — 2026</p>
-                <div class="cv-content">
-                    <p class="cv-role">B.S. Computer Science</p>
-                    <p class="cv-org">Milwaukee School of Engineering</p>
-                    <p class="cv-desc">
-                        Undergraduate research in bias mitigation for large language models.
-                        Coursework in machine learning, algorithms, linear algebra, and statistics.
-                        Returning student bringing 15 years of professional experience to academic study.
-                    </p>
-                </div>
-            </div>
-
-            <div class="cv-entry reveal">
-                <p class="cv-date">2025 — 2026</p>
-                <div class="cv-content">
-                    <p class="cv-role">Undergraduate Researcher</p>
-                    <p class="cv-org">MSOE — AI Bias & Fairness</p>
-                    <p class="cv-desc">
-                        Investigating bias emergence in LLMs using the grokking phenomenon.
-                        Building custom training frameworks in C++/CUDA. Working with the
-                        ROSIE supercomputer for high-performance model training experiments.
-                    </p>
-                </div>
-            </div>
-
-            <div class="cv-entry reveal">
-                <p class="cv-date">2025</p>
-                <div class="cv-content">
-                    <p class="cv-role">Data Science Practicum</p>
-                    <p class="cv-org">KedzioraLab</p>
-                    <p class="cv-desc">
-                        Developed ML models for guitar pickup frequency response prediction.
-                        Built end-to-end data pipelines including web scraping, cleaning, feature
-                        engineering, and model evaluation.
-                    </p>
-                </div>
-            </div>
-
-            <!-- ═══ ADD PRIOR WORK EXPERIENCE HERE ═══
-            <div class="cv-entry reveal">
-                <p class="cv-date">YEAR — YEAR</p>
-                <div class="cv-content">
-                    <p class="cv-role">Your Job Title</p>
-                    <p class="cv-org">Company Name</p>
-                    <p class="cv-desc">Brief description of what you did.</p>
-                </div>
-            </div>
-            -->
+        <div class="field">
+          <label>Prefix / Exchange (3 digits)</label>
+          <input id="patPrefix" type="tel" maxlength="3" placeholder="555" />
         </div>
-
-        <!-- ── Skills ── -->
-        <div class="skills-section reveal">
-            <h3>Technical Toolkit</h3>
-            <div class="skills-grid">
-                <div class="skill-group">
-                    <h4>ML / AI</h4>
-                    <p>PyTorch, Scikit-learn, NLP, Transformers, Bias Auditing, Model Training</p>
-                </div>
-                <div class="skill-group">
-                    <h4>Languages</h4>
-                    <p>Python, C++, CUDA, R, Java</p>
-                </div>
-                <div class="skill-group">
-                    <h4>Tools & Infra</h4>
-                    <p>Git, Linux, HPC/SLURM, Jupyter, Docker</p>
-                </div>
-                <div class="skill-group">
-                    <h4>What I Care About</h4>
-                    <p>AI Ethics, Algorithmic Fairness, Bias Mitigation, Training Dynamics, Responsible AI</p>
-                </div>
-            </div>
+        <button class="btn btn-primary" onclick="analyzePattern()">ANALYZE</button>
+      </div>
+      <div id="patternOutput" style="display:none" class="output-box">
+        <div class="output-header">
+          <span class="output-title">Pattern Analysis + Action Script</span>
+          <button class="copy-btn" id="copyPattern" onclick="copyText('patternPre','copyPattern')">COPY</button>
         </div>
-
-        <!-- ── Narrative ── -->
-        <div class="narrative reveal">
-            <p>
-                I'm not your typical new grad. After 15 years away from academia, I returned
-                to school because I saw how much AI was shaping the world — and I wanted to
-                help make sure it shaped it fairly. That life experience gives me a perspective
-                that's hard to find in a fresh grad: I know what it's like when systems fail
-                real people.
-            </p>
-            <p>
-                I'm looking for roles where I can apply rigorous ML engineering to problems
-                that matter — especially in fairness, safety, and responsible AI. If that
-                resonates, I'd love to talk.
-            </p>
-        </div>
+        <pre id="patternPre"></pre>
+      </div>
     </div>
-</section>
 
-<div class="container"><div class="divider"></div></div>
-
-<!-- ═══════ CONTACT ═══════ -->
-<section id="contact" class="contact-section">
-    <div class="container">
-        <div class="reveal">
-            <p class="section-label">04 — Let's Connect</p>
-            <h2 class="section-title">Say Hello</h2>
-            <p class="section-intro">
-                Currently seeking ML engineering and research roles — especially in
-                AI fairness, bias mitigation, or applied ML. I'd love to hear from you.
-            </p>
-        </div>
-
-        <div class="contact-grid reveal">
-            <!-- UPDATE with your actual info -->
-            <a href="mailto:your.email@example.com" class="contact-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                Email
-            </a>
-            <a href="https://github.com/YOUR-USERNAME" class="contact-link" target="_blank">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                GitHub
-            </a>
-            <a href="https://linkedin.com/in/YOUR-PROFILE" class="contact-link" target="_blank">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                LinkedIn
-            </a>
-        </div>
+    <!-- LOOKUP TAB -->
+    <div id="tab-lookup" class="panel">
+      <div class="panel-label">EXTERNAL LOOKUP RESOURCES</div>
+      <p style="font-size:0.75rem;color:#7a7a50;line-height:1.6;margin-bottom:0.5rem;">
+        Paste any suspicious number into these tools to check community reports, carrier identity, and CNAM data.
+      </p>
+      <div class="lookup-grid">
+        <a class="lookup-card" href="https://reportfraud.ftc.gov" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">FTC Report Fraud</div>
+          <div class="lookup-card-desc">File official FTC complaint</div>
+        </a>
+        <a class="lookup-card" href="https://consumercomplaints.fcc.gov" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">FCC Complaint</div>
+          <div class="lookup-card-desc">File FCC informal complaint</div>
+        </a>
+        <a class="lookup-card" href="https://800notes.com" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">800Notes</div>
+          <div class="lookup-card-desc">Community spam reports</div>
+        </a>
+        <a class="lookup-card" href="https://shouldianswer.com" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">Should I Answer</div>
+          <div class="lookup-card-desc">Crowd-sourced call ratings</div>
+        </a>
+        <a class="lookup-card" href="https://calleridtest.com" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">CallerID Test</div>
+          <div class="lookup-card-desc">Free carrier/line-type lookup</div>
+        </a>
+        <a class="lookup-card" href="https://opencnam.com" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">OpenCNAM</div>
+          <div class="lookup-card-desc">Caller ID name lookup</div>
+        </a>
+        <a class="lookup-card" href="https://naag.org/find-my-ag" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">State AG Finder</div>
+          <div class="lookup-card-desc">Your state attorney general</div>
+        </a>
+        <a class="lookup-card" href="https://donotcall.gov" target="_blank" rel="noreferrer">
+          <div class="lookup-card-name">DoNotCall.gov</div>
+          <div class="lookup-card-desc">Verify/re-register DNC list</div>
+        </a>
+      </div>
     </div>
-</section>
 
-<footer>
-    <div class="container">
-        <p>© 2026 T Kettner. Built with intention <span class="heart-footer">♥</span> not frameworks.</p>
-    </div>
-</footer>
+    <div class="footer">SPAMHUNTER — FREE TOOL — NOT LEGAL ADVICE — ALL DATA STAYS IN YOUR BROWSER — NO TRACKING</div>
+  </div>
+</div>
 
-<!-- ── Scroll Reveal ── -->
 <script>
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, i) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.classList.add('visible');
-                }, i * 60);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  // ── TAB SWITCHING ──────────────────────────────────────────────
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      const names = ['report','pattern','lookup'];
+      t.classList.toggle('active', names[i] === name);
+    });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+  }
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  // ── PHONE FORMATTING ──────────────────────────────────────────
+  function formatPhone(raw) {
+    const d = raw.replace(/\D/g,'').slice(0,10);
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return '(' + d.slice(0,3) + ') ' + d.slice(3);
+    return '(' + d.slice(0,3) + ') ' + d.slice(3,6) + '-' + d.slice(6);
+  }
+
+  function onPhoneInput(el) {
+    const pos = el.selectionStart;
+    const raw = el.value;
+    el.value = formatPhone(raw);
+    updateRisk();
+    updateOutputs();
+  }
+
+  // ── RISK ASSESSMENT ───────────────────────────────────────────
+  function updateRisk() {
+    const digits = document.getElementById('phone').value.replace(/\D/g,'');
+    const badge = document.getElementById('riskBadge');
+    if (digits.length < 6) { badge.style.display = 'none'; return; }
+    const ac = digits.slice(0,3);
+    const px = digits.slice(3,6);
+    const tollFree = ['800','833','844','855','866','877','888'];
+    const highRisk = ['202','213','347','404','469','516','646','718','786','929','305','312','415','702'];
+    let level, label, note, color;
+    if (tollFree.includes(ac)) {
+      level='MEDIUM'; color='#f59e0b';
+      note='Toll-free range — commonly used by telemarketers.';
+    } else if (highRisk.includes(ac)) {
+      level='HIGH'; color='#ef4444';
+      note='Area code ' + ac + ' / prefix ' + px + ' appears frequently in FTC complaint data. Likely neighbor-spoofed VoIP.';
+    } else {
+      level='UNKNOWN'; color='#6b7280';
+      note='No automatic risk signal. Verify via lookup links.';
+    }
+    badge.style.display = 'flex';
+    badge.style.borderColor = color;
+    document.getElementById('riskDot').style.background = color;
+    document.getElementById('riskLevel').style.color = color;
+    document.getElementById('riskLevel').textContent = 'RISK: ' + level;
+    document.getElementById('riskNote').textContent = '— ' + note;
+  }
+
+  // ── COMPLAINT BUILDERS ────────────────────────────────────────
+  function val(id) { return (document.getElementById(id)||{}).value || ''; }
+  function checked(id) { return (document.getElementById(id)||{}).checked || false; }
+
+  function buildFTC() {
+    const phone = val('phone') || '[PHONE]';
+    const digits = phone.replace(/\D/g,'');
+    const ac = digits.slice(0,3), px = digits.slice(3,6);
+    const pattern = checked('patternCheck');
+    let txt = `FEDERAL TRADE COMMISSION — UNWANTED CALL COMPLAINT
+Submit at: reportfraud.ftc.gov
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INCIDENT DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Reported Number:     ${phone}
+Your Number:         ${val('yourPhone') || '[YOUR PHONE]'}
+Date:                ${val('callDate') || '[DATE]'}
+Time:                ${val('callTime') || '[TIME]'}
+Call Type:           ${val('callType') || '[TYPE]'}
+Delivery:            ${val('heard') || '[METHOD]'}`;
+    if (val('amount')) txt += `\nAmount Demanded:     $${val('amount')}`;
+    txt += `\n\nDESCRIPTION:\n${val('description') || '[Describe what happened]'}`;
+    if (pattern) {
+      txt += `\n\nPATTERN NOTE:\nThis number is part of a repeated spoofing pattern. Multiple calls received from numbers matching area code ${ac} / prefix ${px}. Each call originates from a slightly different number in this range, consistent with neighbor-spoofing robocall campaigns.`;
+    }
+    txt += `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nFiled via SpamHunter complaint generator`;
+    return txt;
+  }
+
+  function buildFCC() {
+    const phone = val('phone') || '[PHONE]';
+    const digits = phone.replace(/\D/g,'');
+    const ac = digits.slice(0,3), px = digits.slice(3,6);
+    const pattern = checked('patternCheck');
+    let txt = `FEDERAL COMMUNICATIONS COMMISSION — INFORMAL COMPLAINT
+Submit at: consumercomplaints.fcc.gov
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPLAINT DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Calling Number:      ${phone}
+Number Called:       ${val('yourPhone') || '[YOUR PHONE]'}
+Date:                ${val('callDate') || '[DATE]'}
+Time:                ${val('callTime') || '[TIME]'}
+Issue Type:          Unwanted Calls / Robocall / Do Not Call Violation
+
+DESCRIPTION:\n${val('description') || '[Describe what happened]'}`;
+    if (pattern) {
+      txt += `\n\nPATTERN NOTE:\nCaller is engaging in neighbor-spoofing: repeated calls from numbers sharing area code ${ac} and prefix ${px}. This is consistent with STIR/SHAKEN evasion via VoIP number cycling. I am requesting investigation of the underlying carrier or SIP trunk provider originating this traffic.`;
+    }
+    txt += `\n\nViolation: 47 U.S.C. § 227 (Telephone Consumer Protection Act)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nFiled via SpamHunter complaint generator`;
+    return txt;
+  }
+
+  function updateOutputs() {
+    document.getElementById('ftcPre').textContent = buildFTC();
+    document.getElementById('fccPre').textContent = buildFCC();
+  }
+
+  // ── PATTERN ANALYZER ──────────────────────────────────────────
+  function analyzePattern() {
+    const ac = val('patArea').replace(/\D/g,'');
+    const px = val('patPrefix').replace(/\D/g,'');
+    if (ac.length !== 3 || px.length !== 3) {
+      document.getElementById('patternPre').textContent = 'Enter a valid 3-digit area code and 3-digit prefix.';
+      document.getElementById('patternOutput').style.display = 'block';
+      return;
+    }
+    const result = `PATTERN ANALYSIS — (${ac}) ${px}x-xxxx
+
+This range covers 10,000 possible numbers: (${ac}) ${px}0-0000 through (${ac}) ${px}9-9999.
+
+WHAT TO DO:
+1. On iPhone: Settings → Phone → Silence Unknown Callers
+   On Android: Phone app → Settings → Block Numbers → Block Unknown
+
+2. Contact your carrier and report the (${ac}) ${px}x pattern specifically.
+   Ask them to flag the entire prefix range for spoofing review.
+
+3. Include the pattern note in your FTC/FCC complaints (check the
+   "neighbor spoofing pattern" box in the Report tab).
+
+4. File with your state AG — many states have stronger robocall laws:
+   naag.org/find-my-ag
+
+CARRIER ESCALATION LANGUAGE:
+"I am receiving repeated calls from neighbor-spoofed numbers matching
+area code ${ac}, prefix ${px}. I am requesting that you flag this prefix
+range and investigate the originating SIP trunk or VoIP provider
+under STIR/SHAKEN attestation standards (FCC Report & Order 20-48)."`;
+    document.getElementById('patternPre').textContent = result;
+    document.getElementById('patternOutput').style.display = 'block';
+  }
+
+  // ── COPY TO CLIPBOARD ─────────────────────────────────────────
+  function copyText(preId, btnId) {
+    const text = document.getElementById(preId).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById(btnId);
+      btn.textContent = '✓ COPIED';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── INIT ──────────────────────────────────────────────────────
+  updateOutputs();
 </script>
-
 </body>
 </html>
